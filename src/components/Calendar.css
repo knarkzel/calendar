@@ -1,0 +1,11 @@
+table {
+    margin: 0 auto;
+}
+
+td {
+    outline: 1px solid black;
+}
+
+th, td {
+    padding: 0.5em;
+}
