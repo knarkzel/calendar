@@ -1,4 +1,5 @@
 import './Calendar.css';
+import { useState, useEffect } from 'react';
 
 enum State {
   Finished,
@@ -39,6 +40,30 @@ function mockTasks(days: number[], taskNames: string[]): Map<string, Task[][]> {
   return month;
 }
 
+const taskNames = [
+  "Frys",
+  "Kjøl 4",
+  "Pølse",
+  "Kjøledisk",
+  "Frys 2",
+  "Kjølerom 3",
+];
+
+const monthNames = [
+  "Januar",
+  "Februar",
+  "Mars",
+  "April",
+  "Mai",
+  "Juni",
+  "Juli",
+  "August",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
+
 // Business logic
 class Task {
   name: string;
@@ -61,23 +86,42 @@ function tasksToState(tasks: Task[]): State {
 }
 
 export default function Calendar() {
-  const taskNames = [
-    "Frys",
-    "Kjøl 4",
-    "Pølse",
-    "Kjøledisk",
-    "Frys 2",
-    "Kjølerom 3",
-  ];
-  const days = range(1, 28);
-  const tasks = mockTasks(days, taskNames);
-  
+  // State
+  const [tasks, setTasks] = useState([]);
+  const [days, setDays] = useState([]);
+  const [month, setMonth] = useState(new Date().getMonth());
+
+  // Update tasks with new mock tasks when month changes
+  useEffect(() => {
+    const daysInMonth = new Date(2023, month, 0).getDate();
+    const days = range(1, daysInMonth);
+    setDays(days);
+    setTasks(mockTasks(days, taskNames));
+  }, [month]);
+
+  // Helpers for changing month
+  const incrementMonth = () => {
+    if (month >= 12) {
+      setMonth(1);
+    } else {
+      setMonth(month + 1);      
+    }
+  };
+
+  const decrementMonth = () => {
+    if (month <= 1) {
+      setMonth(12);
+    } else {
+      setMonth(month - 1);
+    }
+  };
+
   return (
     <div>
       <h2 style={{textAlign: "center"}}>
-        <button style={{margin: "0 1em"}}>←</button>
-          Februar
-        <button style={{margin: "0 1em"}}>→</button>
+        <button style={{margin: "0 1em"}} onClick={decrementMonth}>←</button>
+        {monthNames[month - 1]}
+        <button style={{margin: "0 1em"}} onClick={incrementMonth}>→</button>
       </h2>
       <table>
         <thead>
