@@ -118,6 +118,7 @@ export default function Calendar() {
 
   // Helpers for changing month
   const incrementMonth = () => {
+    setShowDay(null);
     if (month >= 12) {
       setMonth(1);
     } else {
@@ -126,6 +127,7 @@ export default function Calendar() {
   };
 
   const decrementMonth = () => {
+    setShowDay(null);
     if (month <= 1) {
       setMonth(12);
     } else {
