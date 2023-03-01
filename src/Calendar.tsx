@@ -8,7 +8,7 @@ enum State {
 
 // Utility functions
 function range(start: number, end: number): number[] {
-  let days = [];
+  let days: number[] = [];
   for (let i = start; i <= end; i += 1) {
     days.push(i);
   }
@@ -60,7 +60,7 @@ function tasksToState(tasks: Task[]): State {
   }
 }
 
-function Calendar() {
+export default function Calendar() {
   const taskNames = [
     "Frys",
     "Kjøl 4",
@@ -107,5 +107,3 @@ function Calendar() {
     </div>
   );
 }
-
-export default Calendar;
