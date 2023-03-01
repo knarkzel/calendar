@@ -164,8 +164,7 @@ export default function Calendar() {
                     <h3>{showDay.name}</h3>
                     <ul>
                       {tasks.get(showDay.name)[showDay.day].map((task) => {
-                        let state = tasksToState(tasks.get(showDay.name)[showDay.day]);
-                        let icon = stateToIcon(state);
+                        let icon = stateToIcon(task.state);
                         return <li>{icon} {task.name}</li>
                     })}
                     </ul>
