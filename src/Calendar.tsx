@@ -33,6 +33,7 @@ function mockTasks(days: number[], taskNames: string[]): Map<string, Task[][]> {
     let totalTasks = days.map((day) => {
       let amount = range(1, Math.random() * 5);
       let tasksForDay = amount.map((id) => new Task(`Task ${id}`, randomState()));
+      console.log(tasksForDay);
       return tasksForDay;
     })
     month.set(name, totalTasks);
@@ -85,12 +86,28 @@ function tasksToState(tasks: Task[]): State {
   }
 }
 
+function stateToIcon(state: State): string {
+  if (state == State.Failed) {
+    return "❌";
+  } else if (state == State.Missing) {
+    return "⚠️";      
+  } else {
+    return "✅";            
+  }
+}
+
+interface ShowDay {
+  day: number;
+  name: string;
+}
+
 export default function Calendar() {
   // State
-  const [tasks, setTasks] = useState([]);
-  const [days, setDays] = useState([]);
-  const [month, setMonth] = useState(new Date().getMonth());
-
+  const [days, setDays] = useState<number[]>([]);
+  const [month, setMonth] = useState<Date>(new Date().getMonth());
+  const [tasks, setTasks] = useState<Map<string, Task[][]>>(new Map());
+  const [showDay, setShowDay] = useState<ShowDay | null>(null);
+  
   // Update tasks with new mock tasks when month changes
   useEffect(() => {
     const daysInMonth = new Date(2023, month, 0).getDate();
@@ -118,10 +135,10 @@ export default function Calendar() {
 
   return (
     <div>
-      <h2 style={{textAlign: "center"}}>
-        <button style={{margin: "0 1em"}} onClick={decrementMonth}>←</button>
+      <h2>
+        <button onClick={decrementMonth}>←</button>
         {monthNames[month - 1]}
-        <button style={{margin: "0 1em"}} onClick={incrementMonth}>→</button>
+        <button onClick={incrementMonth}>→</button>
       </h2>
       <table>
         <thead>
@@ -134,20 +151,25 @@ export default function Calendar() {
           {[...tasks.entries()].map(([name, totalTasks]) => (
             <tr>
               <td>{name}</td>
-              {totalTasks.map((tasks) => {
+              {totalTasks.map((tasks, day) => {
                 let state = tasksToState(tasks);
-                if (state == State.Failed) {
-                  return <td>❌</td>
-                } else if (state == State.Missing) {
-                  return <td>⚠️</td>
-                } else {
-                  return <td>✅</td>
-                }
+                let icon = stateToIcon(state);
+                return <td><a href="#" onClick={() => setShowDay({ day, name })}>{icon}</a></td>
               })}
             </tr>
           ))}
         </tbody>
       </table>
+      {showDay && <>
+                    <h3>{showDay.name}</h3>
+                    <ul>
+                      {tasks.get(showDay.name)[showDay.day].map((task) => {
+                        let state = tasksToState(tasks.get(showDay.name)[showDay.day]);
+                        let icon = stateToIcon(state);
+                        return <li>{icon} {task.name}</li>
+                    })}
+                    </ul>
+                  </>}
     </div>
   );
 }

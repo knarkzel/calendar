@@ -9,3 +9,15 @@ td {
 th, td {
     padding: 0.5em;
 }
+
+td > a {
+    text-decoration: none;
+}
+
+h2 {
+    text-align: center;
+}
+
+button {
+    margin: 0 1em;
+}
